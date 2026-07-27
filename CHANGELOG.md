@@ -14,6 +14,7 @@ versions.
   graph-quality, JSON, and before-and-after comparison output.
 - Seeded property tests for deterministic ordering, graph invariants, and
   degenerate coordinates.
+- A tag-triggered, stage-only npm trusted publishing workflow.
 
 ### Changed
 

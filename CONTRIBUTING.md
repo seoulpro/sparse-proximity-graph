@@ -43,5 +43,17 @@ The package remains coordinate-system agnostic and free of runtime
 dependencies. Rendering, storage, and domain policy belong in callers. New
 development dependencies need a clear maintenance or verification benefit.
 
+## Releases
+
+Maintainers update the package version and changelog on `main`, then create a
+matching `v<version>` tag. The tag runs the `Stage npm package` workflow, which
+checks the tag, tests the package, verifies the tarball, and stages it through
+npm trusted publishing. A maintainer reviews the staged package and approves it
+with 2FA before it becomes public.
+
+The npm trusted publisher must be restricted to `.github/workflows/publish.yml`
+and the `npm stage publish` action. Release tags are immutable and must not be
+reused.
+
 See [SECURITY.md](./SECURITY.md) for private reporting. Contributions are
 licensed under the [MIT license](./LICENSE).
