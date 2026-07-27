@@ -21,6 +21,7 @@
     "SECURITY.md"
   ],
   "scripts": {
+    "benchmark": "node benchmark/graph.mjs",
     "test": "node --test",
     "test:coverage": "node --experimental-test-coverage --test --test-coverage-lines=90 --test-coverage-branches=80 --test-coverage-functions=95",
     "test:types": "tsc -p tsconfig.json",

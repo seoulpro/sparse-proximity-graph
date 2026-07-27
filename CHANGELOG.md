@@ -20,6 +20,7 @@ versions.
 - Deterministically ordered adjacency maps and a segment-intersection helper.
 - Runtime input validation and TypeScript declarations for the public API.
 - Tests and coverage thresholds for graph invariants and validation behavior.
+- A fixed-seed benchmark for uniform, clustered, and grid point sets.
 
 [Unreleased]: https://github.com/seoulpro/sparse-proximity-graph/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/seoulpro/sparse-proximity-graph/releases/tag/v0.1.0

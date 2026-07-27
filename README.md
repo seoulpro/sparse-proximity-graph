@@ -127,6 +127,7 @@ change during the `0.x` series.
 ```sh
 npm install
 npm run check
+npm run benchmark
 ```
 
 `check` validates the source and TypeScript declarations, runs the test suite,
@@ -134,6 +135,10 @@ and enforces coverage thresholds. See
 [CONTRIBUTING.md](./CONTRIBUTING.md) for correctness and benchmark
 expectations, and [SECURITY.md](./SECURITY.md) for how to report a
 vulnerability.
+
+The benchmark uses fixed point sets and reports the median of five warmed runs.
+Results are intended for comparisons on the same machine and Node.js version,
+not as a cross-system latency guarantee.
 
 ## License
 

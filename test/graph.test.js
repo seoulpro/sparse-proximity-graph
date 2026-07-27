@@ -45,11 +45,31 @@ test("removes crossing diagonals when shorter planar alternatives exist", () => 
     { id: 3, x: 10, y: 10 },
     { id: 4, x: 0, y: 10 },
   ];
-  const edges = buildSparsePlanarGraph(points, {
+  const options = {
     maxDistance: 20,
     relativeNeighborhood: false,
-    maxDegreePerPoint: 4,
+    maxDegreePerPoint: 6,
+    sectorCount: 16,
+    reconnectIsolated: false,
+  };
+  const crossingEdges = buildSparsePlanarGraph(points, {
+    ...options,
+    preventCrossings: false,
   });
+  assert.deepEqual(
+    crossingEdges
+      .filter((edge) => edge.distance > 10)
+      .map((edge) => `${edge.a}-${edge.b}`),
+    ["1-3", "2-4"],
+  );
+
+  const edges = buildSparsePlanarGraph(points, options);
+  assert.deepEqual(
+    edges
+      .filter((edge) => edge.distance > 10)
+      .map((edge) => `${edge.a}-${edge.b}`),
+    ["1-3"],
+  );
   const pointById = new Map(points.map((point) => [point.id, point]));
   for (let index = 0; index < edges.length; index += 1) {
     for (let other = index + 1; other < edges.length; other += 1) {
@@ -164,6 +184,40 @@ test("reconnects a locally isolated point when a non-crossing neighbor exists", 
   assert.equal(adjacency.has("c"), true);
 });
 
+test("rejects crossing candidates while reconnecting isolated points", () => {
+  const points = [
+    { id: "a", x: 2, y: 13 },
+    { id: "b", x: 6, y: 17 },
+    { id: "c", x: 9, y: 11 },
+    { id: "d", x: 7, y: 15 },
+    { id: "e", x: 13, y: 5 },
+  ];
+  const options = {
+    maxDistance: 30,
+    maxCandidatesPerPoint: 4,
+    maxDegreePerPoint: 1,
+    sectorCount: 8,
+    relativeNeighborhood: false,
+    reconnectIsolated: true,
+  };
+  const crossingAllowed = buildSparsePlanarGraph(points, {
+    ...options,
+    preventCrossings: false,
+  });
+  const crossingPrevented = buildSparsePlanarGraph(points, options);
+  const hasEdge = (edges, a, b) => edges.some(
+    (edge) => edge.a === a && edge.b === b,
+  );
+
+  assert.equal(hasEdge(crossingAllowed, "b", "c"), true);
+  assert.equal(hasEdge(crossingPrevented, "b", "c"), false);
+  assert.equal(segmentsIntersect(points[1], points[2], points[0], points[3]), true);
+  assert.deepEqual(
+    [...buildAdjacency(crossingPrevented).keys()].sort(),
+    ["a", "b", "c", "d", "e"],
+  );
+});
+
 test("treats explicitly supplied edges as authoritative", () => {
   const points = [
     { id: 1, x: 0, y: 0 },
@@ -197,6 +251,9 @@ test("drops malformed and duplicate supplied edges", () => {
     { id: "b", x: 3, y: 4 },
   ];
   const edges = resolveGraphEdges(points, [
+    null,
+    [],
+    "invalid",
     { a: "b", b: "a", distance: 9 },
     { a: "a", b: "b", distance: 5 },
     { a: "a", b: "missing" },
@@ -295,6 +352,10 @@ test("rejects malformed points, options, and edge collections", () => {
   assert.throws(
     () => buildAdjacency([{ a: "a", b: "b", distance: Infinity }]),
     /finite non-negative distance/,
+  );
+  assert.throws(
+    () => buildAdjacency(null),
+    /edges must be an array/,
   );
   assert.throws(
     () => buildAdjacency([{ a: "a", b: "a", distance: 0 }]),
