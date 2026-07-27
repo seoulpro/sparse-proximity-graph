@@ -1,0 +1,42 @@
+name: Feature request
+description: Propose a change to the pipeline, options, or output.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This package is deliberately small: a coordinate-system-agnostic graph
+        builder with no runtime dependencies. Rendering, storage, and domain
+        policy belong in callers.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What are you trying to do that the current API cannot do?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: >-
+        Sketch the API or behavior change and note whether it affects the
+        pruning pipeline, defaults, or output schema.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Include anything that can be implemented in caller code.
+
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - label: This keeps the package free of runtime dependencies.
+        - label: This does not claim guaranteed planarity or connectivity.
