@@ -136,7 +136,11 @@ and enforces coverage thresholds. See
 expectations, and [SECURITY.md](./SECURITY.md) for how to report a
 vulnerability.
 
-The benchmark uses fixed point sets and reports the median of five warmed runs.
+The benchmark uses deterministic fixtures, isolates each configuration in its
+own process, verifies graph-output checksums, and reports median, p95, and
+sample variation. Scaling and documented worst-case profiles plus JSON
+comparison output are described in the
+[benchmark guide](https://github.com/seoulpro/sparse-proximity-graph/blob/main/benchmark/README.md).
 Results are intended for comparisons on the same machine and Node.js version,
 not as a cross-system latency guarantee.
 

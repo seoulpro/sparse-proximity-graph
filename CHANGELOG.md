@@ -8,6 +8,11 @@ versions.
 
 ## [Unreleased]
 
+### Added
+
+- Reproducible quick, scaling, and stress benchmark profiles with variance,
+  graph-quality, JSON, and before-and-after comparison output.
+
 ## [0.1.0] - 2026-07-28
 
 ### Added
