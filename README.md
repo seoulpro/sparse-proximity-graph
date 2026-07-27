@@ -112,10 +112,11 @@ undirected edges are collapsed to the shortest supplied distance.
 The spatial hash avoids comparing every pair for normally distributed points.
 It cannot bound the work when many points occupy the same cell, so dense or
 coincident input can still require quadratic neighbor comparisons. Crossing
-removal also compares selected edges pairwise. Candidate and degree caps bound
-the later stages and the output size, but not every part of discovery.
-Isolated-point reconnection may relax a neighbor's configured degree cap by
-one.
+removal indexes edge bounds in `maxDistance`-sized cells, reducing comparisons
+for spatially distributed edges; a crowded cell can still require pairwise
+intersection checks. Candidate and degree caps bound the later stages and the
+output size, but not every part of discovery. Isolated-point reconnection may
+relax a neighbor's configured degree cap by one.
 
 The algorithm is deterministic for the same inputs and options, but it does
 not promise a connected graph. Benchmark the point distributions used by your

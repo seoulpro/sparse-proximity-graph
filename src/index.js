@@ -109,6 +109,90 @@ const segmentsIntersectUnchecked = (a, b, c, d) => {
   return false;
 };
 
+const edgeBounds = (edge) => ({
+  minX: Math.min(edge.a.x, edge.b.x),
+  maxX: Math.max(edge.a.x, edge.b.x),
+  minY: Math.min(edge.a.y, edge.b.y),
+  maxY: Math.max(edge.a.y, edge.b.y),
+});
+
+const boundsOverlap = (first, second) => (
+  first.minX <= second.maxX
+  && second.minX <= first.maxX
+  && first.minY <= second.maxY
+  && second.minY <= first.maxY
+);
+
+const axisCells = (minimum, maximum, cellSize) => {
+  const first = Math.floor(minimum / cellSize);
+  const last = Math.floor(maximum / cellSize);
+  if (
+    !Number.isSafeInteger(first)
+    || !Number.isSafeInteger(last)
+    || last - first > 4
+  ) {
+    return null;
+  }
+  return Array.from(
+    { length: last - first + 1 },
+    (_, index) => first + index,
+  );
+};
+
+const edgeCellKeys = (bounds, cellSize) => {
+  const columns = axisCells(bounds.minX, bounds.maxX, cellSize);
+  const rows = axisCells(bounds.minY, bounds.maxY, cellSize);
+  if (!columns || !rows) return null;
+  return columns.flatMap((column) => (
+    rows.map((row) => `${column},${row}`)
+  ));
+};
+
+const createCrossingIndex = (cellSize) => {
+  const accepted = [];
+  const unindexed = [];
+  const buckets = new Map();
+
+  return {
+    accept(edge) {
+      const bounds = edgeBounds(edge);
+      const keys = edgeCellKeys(bounds, cellSize);
+      const candidates = keys
+        ? new Set([
+          ...unindexed,
+          ...keys.flatMap((key) => buckets.get(key) ?? []),
+        ])
+        : new Set(accepted);
+
+      for (const candidate of candidates) {
+        if (
+          boundsOverlap(bounds, candidate.bounds)
+          && segmentsIntersectUnchecked(
+            edge.a,
+            edge.b,
+            candidate.edge.a,
+            candidate.edge.b,
+          )
+        ) {
+          return false;
+        }
+      }
+
+      const descriptor = { edge, bounds };
+      accepted.push(descriptor);
+      if (!keys) {
+        unindexed.push(descriptor);
+      } else {
+        for (const key of keys) {
+          if (!buckets.has(key)) buckets.set(key, []);
+          buckets.get(key).push(descriptor);
+        }
+      }
+      return true;
+    },
+  };
+};
+
 export const segmentsIntersect = (a, b, c, d) => {
   assertSegmentPoint(a, "a");
   assertSegmentPoint(b, "b");
@@ -310,20 +394,16 @@ export const buildSparsePlanarGraph = (inputPoints, overrides = {}) => {
   });
 
   const selected = [];
+  const crossingIndex = options.preventCrossings
+    ? createCrossingIndex(options.maxDistance)
+    : null;
   kept
     .sort(
       (a, b) => a.distance - b.distance
         || compareText(edgeKey(a.a.id, a.b.id), edgeKey(b.a.id, b.b.id)),
     )
     .forEach((edge) => {
-      if (
-        options.preventCrossings
-        && selected.some((other) => (
-          segmentsIntersectUnchecked(edge.a, edge.b, other.a, other.b)
-        ))
-      ) {
-        return;
-      }
+      if (crossingIndex && !crossingIndex.accept(edge)) return;
       selected.push(edge);
     });
 
@@ -346,14 +426,7 @@ export const buildSparsePlanarGraph = (inputPoints, overrides = {}) => {
           b: pointById.get(bId),
           distance: candidate.distance,
         };
-        if (
-          options.preventCrossings
-          && selected.some((other) => (
-            segmentsIntersectUnchecked(edge.a, edge.b, other.a, other.b)
-          ))
-        ) {
-          continue;
-        }
+        if (crossingIndex && !crossingIndex.accept(edge)) continue;
         selected.push(edge);
         degree.set(point.id, 1);
         degree.set(candidate.point.id, (degree.get(candidate.point.id) ?? 0) + 1);

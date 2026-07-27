@@ -12,6 +12,13 @@ versions.
 
 - Reproducible quick, scaling, and stress benchmark profiles with variance,
   graph-quality, JSON, and before-and-after comparison output.
+- Seeded property tests for deterministic ordering, graph invariants, and
+  degenerate coordinates.
+
+### Changed
+
+- Crossing removal now indexes edge bounds spatially while preserving graph
+  output, reducing intersection checks for distributed inputs.
 
 ## [0.1.0] - 2026-07-28
 
