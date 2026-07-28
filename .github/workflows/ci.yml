@@ -37,5 +37,7 @@ jobs:
         run: npm audit --audit-level=high
       - name: Check source, types, tests, and coverage
         run: npm run check
+      - name: Smoke-test benchmark harness
+        run: npm run benchmark:smoke
       - name: Verify package contents
         run: npm pack --dry-run --ignore-scripts

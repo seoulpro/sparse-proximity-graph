@@ -112,10 +112,11 @@ undirected edges are collapsed to the shortest supplied distance.
 The spatial hash avoids comparing every pair for normally distributed points.
 It cannot bound the work when many points occupy the same cell, so dense or
 coincident input can still require quadratic neighbor comparisons. Crossing
-removal also compares selected edges pairwise. Candidate and degree caps bound
-the later stages and the output size, but not every part of discovery.
-Isolated-point reconnection may relax a neighbor's configured degree cap by
-one.
+removal indexes edge bounds in `maxDistance`-sized cells, reducing comparisons
+for spatially distributed edges; a crowded cell can still require pairwise
+intersection checks. Candidate and degree caps bound the later stages and the
+output size, but not every part of discovery. Isolated-point reconnection may
+relax a neighbor's configured degree cap by one.
 
 The algorithm is deterministic for the same inputs and options, but it does
 not promise a connected graph. Benchmark the point distributions used by your
@@ -136,7 +137,11 @@ and enforces coverage thresholds. See
 expectations, and [SECURITY.md](./SECURITY.md) for how to report a
 vulnerability.
 
-The benchmark uses fixed point sets and reports the median of five warmed runs.
+The benchmark uses deterministic fixtures, isolates each configuration in its
+own process, verifies graph-output checksums, and reports median, p95, and
+sample variation. Scaling and documented worst-case profiles plus JSON
+comparison output are described in the
+[benchmark guide](https://github.com/seoulpro/sparse-proximity-graph/blob/main/benchmark/README.md).
 Results are intended for comparisons on the same machine and Node.js version,
 not as a cross-system latency guarantee.
 

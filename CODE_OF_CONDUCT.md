@@ -22,9 +22,9 @@ productively.
 
 ## Reporting
 
-Report conduct concerns privately through the contact channel at
-[limsumin.com](https://limsumin.com). Security vulnerabilities should instead
-follow [SECURITY.md](./SECURITY.md).
+Report conduct concerns privately by email to
+[lim@limsumin.com](mailto:lim@limsumin.com). Security vulnerabilities should
+instead follow [SECURITY.md](./SECURITY.md).
 
 ## Enforcement
 
@@ -34,6 +34,7 @@ Enforcement decisions will be proportionate to the conduct involved.
 
 ## Attribution
 
-Adapted from the [Contributor Covenant](https://www.contributor-covenant.org),
+Adapted from the
+[Contributor Covenant](https://www.contributor-covenant.org/version/2/1/code_of_conduct.html),
 version 2.1, licensed under
 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).

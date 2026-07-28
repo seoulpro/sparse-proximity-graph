@@ -4,6 +4,9 @@ coverage/
 .DS_Store
 *.log
 *.tgz
+benchmark-*.json
+*.cpuprofile
+*.heapprofile
 .env
 .env.*
 !.env.example

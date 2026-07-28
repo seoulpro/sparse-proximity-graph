@@ -32,11 +32,28 @@ performance work. Tests for algorithm changes should consider:
 Do not describe the heuristic as guaranteeing planarity or connectivity unless
 the implementation and proof actually provide that guarantee. Include input
 size, distribution, options, runtime, and machine details with benchmark
-claims.
+claims. Use at least 30 measured samples on the same idle machine and Node.js
+version for before-and-after performance claims. Include the JSON reports, and
+call out checksum or graph-quality changes separately from timing changes. See
+the
+[benchmark guide](https://github.com/seoulpro/sparse-proximity-graph/blob/main/benchmark/README.md)
+for profiles and comparison commands.
 
 The package remains coordinate-system agnostic and free of runtime
 dependencies. Rendering, storage, and domain policy belong in callers. New
 development dependencies need a clear maintenance or verification benefit.
+
+## Releases
+
+Maintainers update the package version and changelog on `main`, then create a
+matching `v<version>` tag. The tag runs the `Stage npm package` workflow, which
+checks the tag, tests the package, verifies the tarball, and stages it through
+npm trusted publishing. A maintainer reviews the staged package and approves it
+with 2FA before it becomes public.
+
+The npm trusted publisher must be restricted to `.github/workflows/publish.yml`
+and the `npm stage publish` action. Release tags are immutable and must not be
+reused.
 
 See [SECURITY.md](./SECURITY.md) for private reporting. Contributions are
 licensed under the [MIT license](./LICENSE).

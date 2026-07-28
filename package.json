@@ -22,10 +22,14 @@
   ],
   "scripts": {
     "benchmark": "node benchmark/graph.mjs",
+    "benchmark:compare": "node benchmark/compare.mjs",
+    "benchmark:scaling": "node benchmark/graph.mjs --profile=scaling",
+    "benchmark:smoke": "node benchmark/graph.mjs --case=uniform --sizes=32 --runs=1 --warmup=0 --sample-time=10 --json",
+    "benchmark:stress": "node benchmark/graph.mjs --profile=stress",
     "test": "node --test",
     "test:coverage": "node --experimental-test-coverage --test --test-coverage-lines=90 --test-coverage-branches=80 --test-coverage-functions=95",
     "test:types": "tsc -p tsconfig.json",
-    "check": "node --check src/index.js && npm run test:types && npm run test:coverage",
+    "check": "node --check src/index.js && node --check benchmark/graph.mjs && node --check benchmark/compare.mjs && npm run test:types && npm run test:coverage",
     "prepublishOnly": "npm run check"
   },
   "keywords": [
