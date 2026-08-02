@@ -145,6 +145,14 @@ comparison output are described in the
 Results are intended for comparisons on the same machine and Node.js version,
 not as a cross-system latency guarantee.
 
+## Related projects
+
+Separate projects that address neighboring problems. Each stands on its own and is not required by sparse-proximity-graph.
+
+- [gap-tolerant-router](https://github.com/seoulpro/gap-tolerant-router) — deterministic, zero-dependency routing for imperfect planar line networks, repairing gaps in memory and running A*.
+- [trajectory-rollup](https://github.com/seoulpro/trajectory-rollup) — turns ordered position observations into deterministic cell and directed-edge summaries with explicit session, gap, late-data, and window rules.
+- [stable-marker-layout](https://github.com/seoulpro/stable-marker-layout) — deterministic, projection-agnostic layout and decluttering for moving point annotations; it does not render.
+
 ## License
 
 [MIT](./LICENSE) © Sumin Lim
