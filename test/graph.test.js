@@ -169,6 +169,22 @@ test("keeps node degree bounded in a dense cluster", () => {
   );
 });
 
+test("can bound dense-cell neighbor comparisons", () => {
+  const points = Array.from({ length: 3 }, (_, id) => ({ id, x: 0, y: 0 }));
+  const options = {
+    maxDistance: 1,
+    maxNeighborComparisons: 6,
+  };
+  assert.doesNotThrow(() => buildSparsePlanarGraph(points, options));
+  assert.throws(
+    () => buildSparsePlanarGraph(points, {
+      ...options,
+      maxNeighborComparisons: 5,
+    }),
+    /neighbor comparison budget exceeded: 5/,
+  );
+});
+
 test("reconnects a locally isolated point when a non-crossing neighbor exists", () => {
   const points = [
     { id: "a", x: 0, y: 0 },
@@ -332,6 +348,10 @@ test("rejects malformed points, options, and edge collections", () => {
     () => buildSparsePlanarGraph([], {
       maxCandidatesPerPoint: Number.MAX_SAFE_INTEGER + 1,
     }),
+    /positive safe integer/,
+  );
+  assert.throws(
+    () => buildSparsePlanarGraph([], { maxNeighborComparisons: 0 }),
     /positive safe integer/,
   );
   assert.throws(

@@ -70,6 +70,7 @@ ordering and therefore does not depend on the host locale.
   maxDistance: 40,
   maxCandidatesPerPoint: 12,
   maxDegreePerPoint: 4,
+  maxNeighborComparisons: Number.MAX_SAFE_INTEGER,
   sectorCount: 8,
   relativeNeighborhood: true,
   preventCrossings: true,
@@ -81,7 +82,10 @@ ordering and therefore does not depend on the host locale.
 raise the selected neighbor's degree by one; it does not search beyond
 `maxDistance`. A zero distance returns no edges. Unknown options and malformed
 numeric or boolean option values throw a `TypeError`. Candidate, degree, and
-sector counts must be positive safe integers.
+sector counts must be positive safe integers. `maxNeighborComparisons` is a
+positive-safe-integer work budget for spatial-hash discovery. Exceeding it
+throws a `RangeError` before later graph stages run; set it from a benchmark of
+the largest point distribution your service accepts.
 
 ## Authoritative edges
 
@@ -115,8 +119,10 @@ coincident input can still require quadratic neighbor comparisons. Crossing
 removal indexes edge bounds in `maxDistance`-sized cells, reducing comparisons
 for spatially distributed edges; a crowded cell can still require pairwise
 intersection checks. Candidate and degree caps bound the later stages and the
-output size, but not every part of discovery. Isolated-point reconnection may
-relax a neighbor's configured degree cap by one.
+output size, but not every part of discovery. `maxNeighborComparisons` can put
+a deterministic ceiling on discovery work, while callers should still apply a
+wall-clock or worker limit when crossing checks must also be bounded. Isolated-
+point reconnection may relax a neighbor's configured degree cap by one.
 
 The algorithm is deterministic for the same inputs and options, but it does
 not promise a connected graph. Benchmark the point distributions used by your
