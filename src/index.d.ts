@@ -28,6 +28,7 @@ export interface SparseGraphOptions {
   maxDistance?: number;
   maxCandidatesPerPoint?: number;
   maxDegreePerPoint?: number;
+  maxNeighborComparisons?: number;
   sectorCount?: number;
   relativeNeighborhood?: boolean;
   preventCrossings?: boolean;

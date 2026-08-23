@@ -15,6 +15,8 @@ versions.
 - Seeded property tests for deterministic ordering, graph invariants, and
   degenerate coordinates.
 - A tag-triggered, stage-only npm trusted publishing workflow.
+- An optional `maxNeighborComparisons` work budget that fails predictably on
+  crowded spatial-hash cells before unbounded discovery work continues.
 
 ### Changed
 

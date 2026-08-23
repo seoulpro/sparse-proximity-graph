@@ -2,6 +2,7 @@ const DEFAULTS = Object.freeze({
   maxDistance: 40,
   maxCandidatesPerPoint: 12,
   maxDegreePerPoint: 4,
+  maxNeighborComparisons: Number.MAX_SAFE_INTEGER,
   sectorCount: 8,
   relativeNeighborhood: true,
   preventCrossings: true,
@@ -253,6 +254,7 @@ const normalizeOptions = (overrides) => {
   for (const name of [
     "maxCandidatesPerPoint",
     "maxDegreePerPoint",
+    "maxNeighborComparisons",
     "sectorCount",
   ]) {
     if (!Number.isSafeInteger(options[name]) || options[name] <= 0) {
@@ -277,6 +279,7 @@ export const buildSparsePlanarGraph = (inputPoints, overrides = {}) => {
   if (points.length < 2 || options.maxDistance === 0) return [];
   const maximumCandidates = options.maxCandidatesPerPoint;
   const maximumDegree = options.maxDegreePerPoint;
+  const maximumNeighborComparisons = options.maxNeighborComparisons;
   const sectors = options.sectorCount;
   const pointById = new Map(points.map((point) => [point.id, point]));
 
@@ -291,6 +294,7 @@ export const buildSparsePlanarGraph = (inputPoints, overrides = {}) => {
   }
 
   const neighbors = new Map();
+  let neighborComparisons = 0;
   for (const point of points) {
     const cellX = Math.floor(point.x / cellSize);
     const cellY = Math.floor(point.y / cellSize);
@@ -299,6 +303,12 @@ export const buildSparsePlanarGraph = (inputPoints, overrides = {}) => {
       for (let offsetY = -1; offsetY <= 1; offsetY += 1) {
         for (const other of grid.get(`${cellX + offsetX},${cellY + offsetY}`) ?? []) {
           if (other.id === point.id) continue;
+          neighborComparisons += 1;
+          if (neighborComparisons > maximumNeighborComparisons) {
+            throw new RangeError(
+              `neighbor comparison budget exceeded: ${maximumNeighborComparisons}`,
+            );
+          }
           const candidateDistance = distance(point, other);
           if (candidateDistance <= options.maxDistance) {
             candidates.push({ point: other, distance: candidateDistance });

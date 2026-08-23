@@ -24,6 +24,7 @@ performance work. Tests for algorithm changes should consider:
 - stable output under reordered input;
 - duplicate or invalid point identifiers;
 - degree and candidate limits;
+- dense-cell neighbor-comparison budgets;
 - crossing removal;
 - isolated-point reconnection;
 - the distinction between an omitted edge set and an authoritative empty set;
