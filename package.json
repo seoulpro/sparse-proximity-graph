@@ -1,6 +1,6 @@
 {
   "name": "sparse-proximity-graph",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Build a deterministic, low-degree, approximately planar graph from 2D points.",
   "type": "module",
   "sideEffects": false,
